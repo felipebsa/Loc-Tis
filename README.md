@@ -1,92 +1,184 @@
 # LOCTIS
 
-🚧 **Status: In Development** — not production-ready yet
+🚧 **Status:** In Development
 
-Multi-tenant SaaS backend for landlords to manage rental properties, contracts, and clients in one place, with isolated workspaces per landlord and built-in financial tracking.
-
----
-
-## About
-
-LOCTIS is a backend API built to manage the day-to-day operations of rental property management (residential and commercial: apartments, houses, warehouses). Each landlord (locador) has an isolated workspace — their properties, contracts, and clients are never visible to other landlords on the same platform (multi-tenancy).
-
-The project is being built backend-first, with a strong focus on production-grade practices: versioned database migrations, containerization, and automated testing — areas the author had not worked with before this project. A frontend is planned for a later phase, once the backend is complete.
-
-**Development notes:** architecture, data modeling, and all implementation decisions are made independently. AI assistance (Claude) is used specifically for syntax clarification and debugging support, not for design or planning.
+Multi-tenant SaaS backend for landlords to manage rental properties, tenants, and contracts through a secure REST API.
 
 ---
 
-## Planned Features
+## Overview
+
+LOCTIS is a backend-first SaaS designed for independent landlords and small property managers.
+
+Each landlord has a completely isolated workspace, ensuring that properties, clients, and contracts are never shared between accounts. The API is being built with scalability, maintainability, and production-oriented backend practices in mind.
+
+The first version focuses entirely on the backend. A frontend application will be developed after the API reaches a stable state.
+
+---
+
+## Goals
+
+Rather than being just another CRUD project, LOCTIS aims to explore concepts commonly found in real production systems, including:
+
+- Multi-tenant architecture
+- JWT authentication
+- Database migrations
+- Automated testing
+- Dockerized deployment
+- Modular and scalable project structure
+
+---
+
+## Features
+
+### Authentication
 
 - [ ] JWT Authentication
-- [ ] Multi-tenant data isolation (automatic scoping by landlord)
-- [ ] Property (Imovel) management — simple and advanced records (custom fields via JSONB)
-- [ ] Client management
-- [ ] Contract management (dates, values, linked property/client)
-- [ ] Pagination on list endpoints
-- [ ] Database migrations with Alembic
-- [ ] Automated tests with pytest
-- [ ] Dockerized environment (API + PostgreSQL via docker-compose)
+- [ ] Password hashing
+- [ ] Protected routes
 
-*Planned for a later phase: notes per record, financial dashboard, payment calendar, contract PDF storage, beginner-friendly explanations of rental fees/terms.*
+### Property Management
+
+- [ ] Property CRUD
+- [ ] Residential and commercial properties
+- [ ] Custom property fields (JSONB)
+
+### Client Management
+
+- [ ] Client CRUD
+
+### Contract Management
+
+- [ ] Contract CRUD
+- [ ] Property ↔ Client relationship
+- [ ] Rental values and dates
+
+### Infrastructure
+
+- [ ] PostgreSQL
+- [ ] Alembic migrations
+- [ ] Docker / Docker Compose
+- [ ] Automated tests with pytest
+- [ ] Pagination and filtering
+
+### Future Features
+
+- Financial dashboard
+- Payment tracking
+- Contract PDF storage
+- Calendar view
+- Notes per entity
+- Rental terminology helper
+
+---
+
+## Domain Model
+
+```
+Landlord
+│
+├── Properties
+├── Clients
+└── Contracts
+```
+
+### Landlord
+
+Represents the account owner.
+
+Every resource inside the system belongs to exactly one landlord, ensuring complete data isolation between users.
+
+### Property
+
+Represents a residential or commercial property available for rent.
+
+Core attributes are stored as typed columns, while advanced or custom information is stored using a JSONB field (`extra_data`).
+
+### Client
+
+Represents a tenant linked to a landlord.
+
+### Contract
+
+Represents the rental agreement connecting a landlord, a property, and a client.
+
+---
+
+## Tech Stack
+
+### Backend
+
+- Python 3
+- FastAPI
+- SQLAlchemy 2.0
+- Pydantic
+- PostgreSQL
+- Alembic
+- Pytest
+- Uvicorn
+
+### Infrastructure
+
+- Docker
+- Docker Compose
 
 ---
 
 ## Project Structure
 
 ```
-(to be defined)
+backend/
+│
+├── app/
+│   ├── api/
+│   ├── core/
+│   ├── database/
+│   ├── models/
+│   ├── schemas/
+│   ├── services/
+│   └── repositories/
+│
+├── tests/
+├── alembic/
+└── requirements.txt
 ```
 
 ---
 
-## Installation (local development)
+## Local Development
 
-**Requirements:** Python 3.8+, PostgreSQL, Docker
+### Requirements
+
+- Python 3.12+
+- PostgreSQL
+- Docker
 
 ```bash
-# Clone the repository
 git clone https://github.com/felipebsa/loctis.git
-cd loctis
 
-# (setup instructions to be added once the base structure is defined)
+cd loctis
 ```
 
----
-
-## Planned Data Models
-
-### Locador
-The account owner — represents a landlord using the platform. All tenant-scoped data (properties, clients, contracts) belongs to a Locador via foreign key.
-
-### Imovel
-A rental property (residential or commercial). Core typed fields (e.g. type, condo fee) plus an `extra_data` (JSONB) field for advanced/custom details defined per landlord.
-
-### Cliente
-A tenant/renter linked to a Locador.
-
-### Contrato
-Links a Locador, Cliente, and Imovel together, with contract dates and value.
+Setup instructions will be added once the base architecture is complete.
 
 ---
 
-## Tech Stack
+## Roadmap
 
-**Backend**
-- [Python 3](https://python.org)
-- [FastAPI](https://fastapi.tiangolo.com)
-- [SQLAlchemy 2.0](https://sqlalchemy.org)
-- [Pydantic](https://docs.pydantic.dev)
-- [PostgreSQL](https://postgresql.org)
-- [Alembic](https://alembic.sqlalchemy.org)
-- [pytest](https://pytest.org)
-- [Uvicorn](https://www.uvicorn.org)
-
-**Infrastructure**
-- [Docker](https://www.docker.com) / docker-compose
+- [ ] Base project architecture
+- [ ] Database models
+- [ ] Authentication
+- [ ] Multi-tenancy
+- [ ] CRUD endpoints
+- [ ] Automated tests
+- [ ] Docker environment
+- [ ] Documentation
+- [ ] Frontend
 
 ---
 
-## Status
+## Current Status
 
-🚧 **In development.** Currently in the planning/setup phase — project structure, base models, authentication, and multi-tenancy are being designed and implemented first, followed by migrations, containerization, and tests.
+LOCTIS is currently under active development.
+
+The current milestone focuses on establishing the project's architecture, authentication system, multi-tenant data isolation, and database layer before implementing business features.
